@@ -7,27 +7,11 @@ using System.Text;
 
 namespace Receiver
 {
-    public class ReviceMessages
+    public class ReviceMessages: RabbitMQMessages
     {
-        private IConnection connection;
-        private IModel channel;
-
-        public void Connect()
-        {
-            ConnectionFactory factory = new ConnectionFactory
-            {
-                HostName = ConnectionConstants.HostName
-            };
-
-            connection = factory.CreateConnection();
-            channel = connection.CreateModel();
-
-            channel.QueueDeclare(ConnectionConstants.QueueName, false, false, false, null);
-        }
-
         public void ConsumeMessages()
         {
-            EventingBasicConsumer consumer = new EventingBasicConsumer(channel);
+            EventingBasicConsumer consumer = new EventingBasicConsumer(chanel);
 
             WriteStartMessage();
 
@@ -41,7 +25,7 @@ namespace Receiver
                 //channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
                 try
                 {
-                    object message = SerializationHelper.FromByteArray(body.ToByteArray());
+                    object message = SerializationHelper.ConvertToObject<GuidMessage>(body);
                     Console.WriteLine("Received {0} : {1}", message.GetType().Name, message);
                 }
                 catch (Exception ex)
@@ -49,7 +33,7 @@ namespace Receiver
                     Console.WriteLine("Failed message: {0}", ex);
                 }
             };
-            channel.BasicConsume(ConnectionConstants.QueueName, true, consumer);
+            chanel.BasicConsume(ConnectionConstants.QueueName, true, consumer);
             connection.Close();
             connection.Dispose();
             connection = null;
@@ -57,8 +41,7 @@ namespace Receiver
 
         private static void WriteStartMessage()
         {
-            string startMessage = string.Format("Waiting for messages on {0}/{1}. Press 'q' to quit",
-                ConnectionConstants.HostName, ConnectionConstants.QueueName);
+            string startMessage = $"Waiting for messages on {ConnectionConstants.HostName} - queue: {ConnectionConstants.QueueName}. Press 'q' to quit";
             Console.WriteLine(startMessage);
         }
     }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Receiver
+namespace Message
 {
     public static class ConnectionConstants
     {
