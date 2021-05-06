@@ -4,6 +4,7 @@ using RabbitMQ.Client.Events;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace Receiver
 {
@@ -19,9 +20,9 @@ namespace Receiver
             {
                 var body = Encoding.UTF8.GetString(ea.Body.ToArray());
                 Console.WriteLine(" [x] Received {0}", body);
-
                 Console.WriteLine(" [x] Done");
 
+                chanel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
                 try
                 {
                     object message = SerializationHelper.ConvertToObject<GuidMessage>(body);
@@ -32,10 +33,7 @@ namespace Receiver
                     Console.WriteLine("Failed message: {0}", ex);
                 }
             };
-            chanel.BasicConsume(ConnectionConstants.QueueName, true, consumer);
-            connection.Close();
-            connection.Dispose();
-            connection = null;
+            chanel.BasicConsume(ConnectionConstants.QueueName, false, consumer);
         }
 
         private static void WriteStartMessage()
