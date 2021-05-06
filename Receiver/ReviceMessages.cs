@@ -19,7 +19,7 @@ namespace Receiver
             consumer.Received += (model, ea) =>
             {
                 var body = Encoding.UTF8.GetString(ea.Body.ToArray());
-                Console.WriteLine(" [x] Received {0}", body);
+                Console.WriteLine(" [x] Received {0}", body, ConsoleColor.Blue);
                 Console.WriteLine(" [x] Done");
 
                 chanel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
