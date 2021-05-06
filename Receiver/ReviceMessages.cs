@@ -22,7 +22,6 @@ namespace Receiver
 
                 Console.WriteLine(" [x] Done");
 
-                //channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
                 try
                 {
                     object message = SerializationHelper.ConvertToObject<GuidMessage>(body);

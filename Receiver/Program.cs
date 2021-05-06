@@ -10,7 +10,7 @@ namespace Receiver
             producer.Connect();
             producer.ConsumeMessages();
 
-            Console.WriteLine("Quitting...");
+            Console.ReadLine();
         }
     }
 }
