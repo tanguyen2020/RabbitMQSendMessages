@@ -28,7 +28,7 @@ namespace Sender
             };
 
             SendMessage(message);
-            Console.WriteLine("Sent Guid message");
+            Console.WriteLine("Sent message");
         }
 
         private void SendMessage<T>(T message)
